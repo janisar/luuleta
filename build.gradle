@@ -40,6 +40,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compileOnly 'org.projectlombok:lombok:1.16.20'
+    compile files("${System.properties['java.home']}/../lib/tools.jar")
     annotationProcessor 'org.projectlombok:lombok:1.16.20'
 //    compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'

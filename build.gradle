@@ -37,6 +37,7 @@ bootJar {
 }
 
 dependencies {
+    runtime files(org.gradle.internal.jvm.Jvm.current().toolsJar)
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compileOnly 'org.projectlombok:lombok:1.16.20'

@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers( GET,"/**")
+                .antMatchers(GET, "/**")
                 .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
                 .and()
                 .authorizeRequests()

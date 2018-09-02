@@ -15,6 +15,8 @@ public class TokenApiClient {
 
     @Value("${tokenapi.base.url}")
     private String baseUrl;
+    @Value("${tokenapi.base.port}")
+    private String port;
 
     private RestTemplate rest;
     private HttpHeaders headers;
@@ -30,8 +32,12 @@ public class TokenApiClient {
         ObjectMapper mapper = new ObjectMapper();
 
         HttpEntity<String> requestEntity = new HttpEntity<>(mapper.writeValueAsString(object), headers);
-        ResponseEntity<String> responseEntity = rest.exchange(baseUrl + path, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = rest.exchange(getUrl(path), HttpMethod.POST, requestEntity, String.class);
 
         return responseEntity.getBody();
+    }
+
+    private String getUrl(String path) {
+        return baseUrl + ":" + port + "/" + path;
     }
 }

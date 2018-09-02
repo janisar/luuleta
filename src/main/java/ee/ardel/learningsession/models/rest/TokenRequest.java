@@ -12,4 +12,4 @@ import lombok.Setter;
 public class TokenRequest {
 
     private String token;
-}
+    }

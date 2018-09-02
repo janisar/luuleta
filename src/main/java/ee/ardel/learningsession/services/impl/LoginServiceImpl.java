@@ -1,10 +1,11 @@
-package ee.ardel.learningsession.services;
+package ee.ardel.learningsession.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.ardel.learningsession.form.UserForm;
-import ee.ardel.learningsession.http.RestClient;
+import ee.ardel.learningsession.http.TokenApiClient;
 import ee.ardel.learningsession.models.User;
 import ee.ardel.learningsession.repository.UserRepository;
+import ee.ardel.learningsession.services.LoginService;
 import ee.ardel.learningsession.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,7 @@ import static ee.ardel.learningsession.models.Role.EMPLOYEE;
 @Component
 public class LoginServiceImpl implements LoginService {
 
-    private final RestClient restClient;
+    private final TokenApiClient tokenApiClient;
 
     private final UserRepository userRepository;
 
@@ -27,8 +28,8 @@ public class LoginServiceImpl implements LoginService {
     private String hash;
 
     @Autowired
-    public LoginServiceImpl(RestClient restClient, UserRepository userRepository) {
-        this.restClient = restClient;
+    public LoginServiceImpl(TokenApiClient tokenApiClient, UserRepository userRepository) {
+        this.tokenApiClient = tokenApiClient;
         this.userRepository = userRepository;
     }
 
@@ -42,7 +43,7 @@ public class LoginServiceImpl implements LoginService {
         Optional<User> loginUser = userRepository.findOne(Example.of(user, ExampleMatcher.matchingAll()));
 
         if (loginUser.isPresent()) {
-            return restClient.post("/token", loginUser.get());
+            return tokenApiClient.post("/token", loginUser.get());
         }
         throw new SecurityException("unauthorized");
     }

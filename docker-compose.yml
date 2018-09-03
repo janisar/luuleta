@@ -38,3 +38,4 @@ services:
     environment:
         SPRING_APPLICATION_NAME: learningsession
         SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/test
+        TOKENAPI_BASE_URL: http://tokenapi

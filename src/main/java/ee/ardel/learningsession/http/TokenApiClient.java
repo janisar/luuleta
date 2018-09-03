@@ -2,6 +2,7 @@ package ee.ardel.learningsession.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ee.ardel.learningsession.models.rest.TokenRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,7 @@ public class TokenApiClient {
     }
 
     public String post(String path, Object object) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
 
         HttpEntity<String> requestEntity = new HttpEntity<>(mapper.writeValueAsString(object), headers);
         ResponseEntity<String> responseEntity = rest.exchange(getUrl(path), HttpMethod.POST, requestEntity, String.class);

@@ -6,12 +6,13 @@ import org.springframework.data.annotation.Id;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Job {
 
     @Id
-    private long id;
+    private String id;
 
     private String description;
     private String title;

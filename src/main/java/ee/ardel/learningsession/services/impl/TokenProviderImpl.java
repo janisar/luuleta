@@ -5,7 +5,7 @@ import ee.ardel.learningsession.http.TokenApiClient;
 import ee.ardel.learningsession.models.rest.TokenRequest;
 import ee.ardel.learningsession.services.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,9 +17,6 @@ import java.util.List;
 
 @Component
 public class TokenProviderImpl implements TokenProvider {
-
-    @Value("${password.hash}")
-    private String hash;
 
     private final TokenApiClient tokenApiClient;
 
@@ -49,9 +46,15 @@ public class TokenProviderImpl implements TokenProvider {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add((GrantedAuthority) () -> "ROLE_USER");
 
-        User tempUser = new User("USER", hash, true, true, true, true, authorities);
+        try {
+            String user = tokenApiClient.post("token/user", jwt);
+            User tempUser = new User(user, "", true, true, true, true, authorities);
 
-        return new UsernamePasswordAuthenticationToken(tempUser, hash, authorities);
+            return new UsernamePasswordAuthenticationToken(tempUser, "", authorities);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new AnonymousAuthenticationToken("", null, null);
     }
 
     private boolean validate(String token) throws JsonProcessingException {

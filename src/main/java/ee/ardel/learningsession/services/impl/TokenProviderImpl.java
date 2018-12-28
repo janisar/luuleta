@@ -47,7 +47,7 @@ public class TokenProviderImpl implements TokenProvider {
         authorities.add((GrantedAuthority) () -> "ROLE_USER");
 
         try {
-            String user = tokenApiClient.post("token/user", jwt);
+            String user = tokenApiClient.post("token/user", new TokenRequest(jwt));
             User tempUser = new User(user, "", true, true, true, true, authorities);
 
             return new UsernamePasswordAuthenticationToken(tempUser, "", authorities);

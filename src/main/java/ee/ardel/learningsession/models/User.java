@@ -4,8 +4,8 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +20,8 @@ public class User {
     private String firstName;
     private String lastName;
     private Role role;
-    private List<String> interestedJobs;
-    private List<String> notInterestedJobs;
+    private Set<String> interestedJobs;
+    private Set<String> notInterestedJobs;
 
     @Getter(AccessLevel.PRIVATE)
     private String password;
@@ -30,16 +30,16 @@ public class User {
         this.id = ObjectId.get().toString();
     }
 
-    public List<String> getInterestedJobs() {
+    public Set<String> getInterestedJobs() {
         if (this.interestedJobs == null) {
-            this.interestedJobs = new ArrayList<>();
+            this.interestedJobs = new HashSet<>();
         }
         return this.interestedJobs;
     }
 
-    public List<String> getNotInterestedJobs() {
+    public Set<String> getNotInterestedJobs() {
         if (this.notInterestedJobs == null) {
-            this.notInterestedJobs = new ArrayList<>();
+            this.notInterestedJobs = new HashSet<>();
         }
         return this.notInterestedJobs;
     }

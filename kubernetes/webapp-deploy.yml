@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+        - image: janisardel/learninglession:0.0.1
+          name: learninglession
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo:27017/test
+            - name: TOKENAPI_BASE_URL
+              value: http://172.17.0.10
+            - name: TOKENAPI_BASE_PORT
+              value: "8082"
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: tokenapi
+  labels:
+    name: tokenapi
+    app: tokenapi
+spec:
+  template:
+    metadata:
+      labels:
+        app: tokenapi
+    spec:
+      containers:
+        - image: janisardel/tokenapi:0.0.2
+          name: tokenapi
+          ports:
+            - name: tokenapi
+              containerPort: 8082

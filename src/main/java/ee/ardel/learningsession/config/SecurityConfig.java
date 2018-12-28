@@ -13,10 +13,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -47,6 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(Collections.singletonList(new ParameterBuilder()
+                        .name("Authorization")
+                        .description("Bearer token")
+                        .modelRef(new ModelRef("string"))
+                        .parameterType("header")
+                        .required(false)
+                        .build()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ee.ardel.learningsession.controllers"))
                 .build();
@@ -63,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/register", "/login").and();
+        web.ignoring().antMatchers("/register", "/login", "swagger-ui.html").and();
     }
 
     @Override
@@ -71,11 +83,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(GET, "/**")
+                .antMatchers(GET, "/api/**")
                 .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
                 .and()
                 .authorizeRequests()
-                .antMatchers(POST, "/**")
+                .antMatchers(POST, "/api/**")
                 .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
                 .and()
                 .addFilterBefore(new AuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);

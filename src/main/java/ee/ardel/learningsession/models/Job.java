@@ -3,6 +3,7 @@ package ee.ardel.learningsession.models;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
+import java.util.List;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter
@@ -16,5 +17,8 @@ public class Job {
 
     private String description;
     private String title;
-    private Company company;
+    private String salary;
+    private String companyId;
+
+    List<Reaction> reactionList;
 }

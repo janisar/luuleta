@@ -3,6 +3,7 @@ package ee.ardel.learningsession.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import ee.ardel.learningsession.form.UserForm;
 import ee.ardel.learningsession.http.TokenApiClient;
+import ee.ardel.learningsession.models.Role;
 import ee.ardel.learningsession.models.User;
 import ee.ardel.learningsession.repository.UserRepository;
 import ee.ardel.learningsession.services.LoginService;
@@ -14,8 +15,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
-import static ee.ardel.learningsession.models.Role.EMPLOYEE;
 
 @Component
 public class LoginServiceImpl implements LoginService {
@@ -54,7 +53,7 @@ public class LoginServiceImpl implements LoginService {
                 .email(userForm.getEmail())
                 .firstName(userForm.getFirstName())
                 .lastName(userForm.getLastName())
-                .role(EMPLOYEE)
+                .role(Role.from(userForm.getRole()))
                 .password(PasswordUtil.hashPassword(userForm.getPassword().toCharArray(), hash.getBytes()))
                 .build();
         user.generateId();

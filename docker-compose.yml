@@ -20,7 +20,7 @@ services:
       context: ../../tokenapi/
     ports:
       - "8082:8082"
-    links:
+    depends_on:
       - mongodb
       - redis
     environment:
@@ -39,3 +39,5 @@ services:
         SPRING_APPLICATION_NAME: learningsession
         SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/test
         TOKENAPI_BASE_URL: http://tokenapi
+
+

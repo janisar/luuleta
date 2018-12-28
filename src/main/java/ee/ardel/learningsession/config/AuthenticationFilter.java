@@ -9,6 +9,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static ee.ardel.learningsession.util.TokenUtil.resolveToken;
+
 
 public class AuthenticationFilter implements Filter {
 
@@ -22,9 +24,8 @@ public class AuthenticationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
 
         try {
-
             HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-            String jwt = this.resolveToken(httpServletRequest);
+            String jwt = resolveToken(httpServletRequest);
             if (StringUtils.hasText(jwt)) {
                 if (this.tokenProvider.validateToken(jwt)) {
                     Authentication authentication = this.tokenProvider.getAuthentication(jwt);
@@ -41,15 +42,6 @@ public class AuthenticationFilter implements Filter {
 
     private void resetAuthenticationAfterRequest() {
         SecurityContextHolder.getContext().setAuthentication(null);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
-        }
-        return null;
     }
 
     @Override

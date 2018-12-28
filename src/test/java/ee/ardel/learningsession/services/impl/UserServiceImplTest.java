@@ -36,14 +36,14 @@ public class UserServiceImplTest {
     @Test
     public void shouldUpdateUserWithReactedJob() {
         ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
-        JobReactRequest reactRequest = new JobReactRequest("test1", ReactionType.UP);
-        User testUser = User.builder().firstName("Test").build();
-        Job job = Job.builder().description("Developer").build();
+//        JobReactRequest reactRequest = new JobReactRequest("test1", ReactionType.UP);
+//        User testUser = User.builder().firstName("Test").build();
+//        Job job = Job.builder().description("Developer").build();
+//
+//        when(userRepository.findById("TEST")).thenReturn(Optional.of(testUser));
+//        when(jobService.get("test1")).thenReturn(job);
 
-        when(userRepository.findById("TEST")).thenReturn(Optional.of(testUser));
-        when(jobService.get("test1")).thenReturn(job);
-
-        userService.reactToJob(reactRequest, "TEST");
+//        userService.reactToJob(reactRequest, "TEST");
 
         verify(jobService).get(eq("test1"));
         verify(userRepository).save(argumentCaptor.capture());
@@ -54,18 +54,23 @@ public class UserServiceImplTest {
     @Test
     public void shouldUpdateUserWithNotInterestedJob() {
         ArgumentCaptor<User> argumentCaptor = ArgumentCaptor.forClass(User.class);
-        JobReactRequest reactRequest = new JobReactRequest("test1", ReactionType.DOWN);
-        User testUser = User.builder().firstName("Test").build();
-        Job job = Job.builder().description("Developer").build();
+//        JobReactRequest reactRequest = new JobReactRequest("test1", ReactionType.DOWN);
+//        User testUser = User.builder().firstName("Test").build();
+//        Job job = Job.builder().description("Developer").build();
 
-        when(userRepository.findById("TEST")).thenReturn(Optional.of(testUser));
-        when(jobService.get("test1")).thenReturn(job);
-
-        userService.reactToJob(reactRequest, "TEST");
+//        when(userRepository.findById("TEST")).thenReturn(Optional.of(testUser));
+//        when(jobService.get("test1")).thenReturn(job);
+//
+//        userService.reactToJob(reactRequest, "TEST");
 
         verify(jobService).get(eq("test1"));
         verify(userRepository).save(argumentCaptor.capture());
 
         assertEquals(1, argumentCaptor.getValue().getNotInterestedJobs().size());
+    }
+
+    @Test
+    public void test() {
+        System.out.println(0 / 1);
     }
 }

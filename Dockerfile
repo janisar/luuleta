@@ -1,10 +1,15 @@
-FROM openjdk:11.0-oracle
+FROM gradle:jdk11
 VOLUME /tmp
-ARG JAR_FILE=build/libs/learningsession-0.1.0.jar
-ADD ${JAR_FILE} app.jar
+COPY . /app
+
+WORKDIR /app
+USER root
+
+ENV GRADLE_HOME=/usr/bin/gradle
+ENV PATH=$PATH:$GRADLE_HOME/bin
+
+RUN gradle -s bootJar
 
 ENTRYPOINT ["/usr/bin/java"]
-
 EXPOSE 8080
-
-CMD ["-jar", "app.jar"]
+CMD ["-jar", "build/libs/learningsession-0.1.0.jar"]

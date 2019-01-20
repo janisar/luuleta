@@ -19,6 +19,7 @@ public class Job {
     private String title;
     private String salary;
     private String companyId;
+    private Location location;
 
     List<Reaction> reactionList;
 }

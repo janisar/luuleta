@@ -37,6 +37,7 @@ public class UserController {
     @RequestMapping(value = "/me", method = GET, produces = "application/json")
     public ResponseEntity<User> user() {
         String userId = AuthService.getUserId();
+
         return new ResponseEntity<>(userService.get(userId), OK);
     }
 

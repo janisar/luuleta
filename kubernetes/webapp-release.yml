@@ -1,13 +1,12 @@
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-  name: webapp
+  name: jobswiper
 spec:
   type: NodePort
-  ports:
-    - nodePort: 31317
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
   selector:
-    app: webapp
+    app: jobswiper
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

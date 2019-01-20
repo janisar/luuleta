@@ -1,6 +1,7 @@
 package ee.ardel.learningsession.services.impl;
 
 import ee.ardel.learningsession.models.Job;
+import ee.ardel.learningsession.models.Location;
 import ee.ardel.learningsession.models.rest.JobFilterRequest;
 import ee.ardel.learningsession.repository.JobRepository;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,5 +40,17 @@ public class JobServiceImplTest {
         Job job = jobService.get(jobId);
 
         assertNotNull(job);
+    }
+
+    @Test
+    public void shouldSaveJobWithLocation() {
+        String jobId = "test1";
+        Job testJob = new Job();
+        Location location = new Location();
+        location.setLat(1.1);
+        location.setLng(101.22);
+
+
+        Job job = jobService.save(testJob);
     }
 }

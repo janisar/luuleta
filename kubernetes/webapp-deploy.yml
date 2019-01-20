@@ -1,22 +1,29 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: webapp
+  name: jobswiper
 spec:
+  selector:
+    matchLabels:
+      app: jobswiper
+  replicas: 2
   template:
     metadata:
       labels:
-        app: webapp
+        app: jobswiper
     spec:
       containers:
-        - image: janisardel/learninglession:0.0.1
-          name: learninglession
+        - name: jobswiper
+          image: janisardel/luuleta
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo:27017/test
             - name: TOKENAPI_BASE_URL
-              value: http://172.17.0.10
+              value: http://tokenapi
             - name: TOKENAPI_BASE_PORT
               value: "8082"
           ports:
             - containerPort: 8080
+              name: server
+            - containerPort: 8081
+              name: management

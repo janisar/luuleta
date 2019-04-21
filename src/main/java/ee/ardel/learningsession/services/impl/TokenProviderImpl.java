@@ -1,66 +1,67 @@
 package ee.ardel.learningsession.services.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import ee.ardel.learningsession.http.TokenApiClient;
-import ee.ardel.learningsession.models.rest.TokenRequest;
 import ee.ardel.learningsession.services.TokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class TokenProviderImpl implements TokenProvider {
 
-    private final TokenApiClient tokenApiClient;
+    private final String publicKey;
 
-    @Autowired
-    public TokenProviderImpl(TokenApiClient tokenApiClient) {
-        this.tokenApiClient = tokenApiClient;
+    public TokenProviderImpl(@Value("${jwt.public.key}") String publicKey) {
+
+        this.publicKey = publicKey;
     }
 
     @Override
-    public String generateToken() {
-        return null;
+    public Authentication getAuthentication(String jwtString) {
+
+        var jwt = Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwtString).getBody();
+        List<GrantedAuthority> authorities = getGrantedAuthorities(jwt.get("role"));
+
+
+        return new UsernamePasswordAuthenticationToken(
+                new User(
+                        jwt.get(Claims.ID).toString(), "",
+                        true, true,
+                        true, true, authorities),
+                "", authorities);
     }
 
-    @Override
-    public boolean validateToken(String jwt) {
-        try {
-            return validate(jwt);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public Authentication getAuthentication(String jwt) {
-
+    private List<GrantedAuthority> getGrantedAuthorities(Object role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add((GrantedAuthority) () -> "ROLE_USER");
-
-        try {
-            String user = tokenApiClient.post("token/user", new TokenRequest(jwt));
-            User tempUser = new User(user, "", true, true, true, true, authorities);
-
-            return new UsernamePasswordAuthenticationToken(tempUser, "", authorities);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        if (role != null) {
+            authorities.add((GrantedAuthority) role::toString);
         }
-        return new AnonymousAuthenticationToken("", null, null);
+
+        return authorities;
     }
 
-    private boolean validate(String token) throws JsonProcessingException {
-        String validateTokenPath = "token/validate";
-        String response = tokenApiClient.post(validateTokenPath, new TokenRequest(token));
-
-        return Boolean.parseBoolean(response);
+    private Key getPublicKey() {
+        try {
+            byte[] encoded = Base64.decodeBase64(publicKey);
+            var kf = KeyFactory.getInstance("RSA");
+            return kf.generatePublic(new X509EncodedKeySpec(encoded));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new RuntimeException("Kaiki on putsiss");
+        }
     }
 }

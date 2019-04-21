@@ -1,7 +1,7 @@
 package ee.ardel.learningsession.controllers;
 
 import ee.ardel.learningsession.models.Job;
-import ee.ardel.learningsession.models.rest.JobFilterRequest;
+import ee.ardel.learningsession.models.rest.JobRequest;
 import ee.ardel.learningsession.services.JobService;
 import ee.ardel.learningsession.services.TokenProvider;
 import ee.ardel.learningsession.services.impl.AuthService;
@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import static ee.ardel.learningsession.util.TokenUtil.resolveToken;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -34,7 +32,7 @@ public class JobController {
     }
 
     @ResponseBody
-    @RequestMapping(method = GET)
+    @GetMapping
     public ResponseEntity<Iterable<Job>> getAll() {
         String userId = AuthService.getUserId();
 
@@ -42,11 +40,12 @@ public class JobController {
     }
 
     @ResponseBody
-    @RequestMapping(method = POST)
-    public Job saveJob(@RequestBody Job job, HttpServletRequest request) {
+    @PostMapping
+    @PreAuthorize("hasRole('COMPANY')")
+    public Job saveJob(@RequestBody JobRequest jobRequest, HttpServletRequest request) {
         Authentication a = tokenProvider.getAuthentication(resolveToken(request));
         User user = (User) a.getPrincipal();
-        job.setCompanyId(user.getUsername());
-        return jobService.save(job);
+        jobRequest.setCompanyId(user.getUsername());
+        return jobService.create(jobRequest);
     }
 }

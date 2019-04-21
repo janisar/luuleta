@@ -2,10 +2,10 @@ package ee.ardel.learningsession.services.impl;
 
 import ee.ardel.learningsession.models.Job;
 import ee.ardel.learningsession.models.Location;
-import ee.ardel.learningsession.models.rest.JobFilterRequest;
 import ee.ardel.learningsession.repository.JobRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -44,13 +44,19 @@ public class JobServiceImplTest {
 
     @Test
     public void shouldSaveJobWithLocation() {
-        String jobId = "test1";
         Job testJob = new Job();
         Location location = new Location();
         location.setLat(1.1);
         location.setLng(101.22);
+        testJob.setLocation(location);
 
 
-        Job job = jobService.save(testJob);
+        ArgumentCaptor<Job> jobArgumentCaptor = ArgumentCaptor.forClass(Job.class);
+
+        when(jobRepository.save(jobArgumentCaptor.capture())).thenReturn(new Job());
+
+        jobService.update(testJob);
+
+        assertNotNull(jobArgumentCaptor.getValue().getLocation());
     }
 }

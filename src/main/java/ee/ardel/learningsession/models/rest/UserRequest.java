@@ -1,4 +1,4 @@
-package ee.ardel.learningsession.form;
+package ee.ardel.learningsession.models.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserForm {
+public class UserRequest {
 
     private String email;
     private String firstName;

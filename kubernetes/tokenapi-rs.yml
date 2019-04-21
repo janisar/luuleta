@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: tokenapi
+  labels:
+    app: tokenapi
+    tier: tokenapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: tokenapi
+  template:
+    metadata:
+      labels:
+        tier: tokenapi
+    spec:
+      containers:
+        - image: janisardel/luuleta-token:latest
+          name: tokenapi

@@ -28,16 +28,16 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/auth
       SPRING_REDIS_HOST: redis
 
-  learningsession:
-    build: .
-    ports:
-      - "8080:8080"
-    links:
-      - mongodb
-      - redis
-    environment:
-        SPRING_APPLICATION_NAME: learningsession
-        SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/test
-        TOKENAPI_BASE_URL: http://tokenapi
+#  learningsession:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - mongodb
+#      - redis
+#    environment:
+#        SPRING_APPLICATION_NAME: learningsession
+#        SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/test
+#        TOKENAPI_BASE_URL: http://tokenapi
 
 

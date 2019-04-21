@@ -9,15 +9,10 @@ import ee.ardel.learningsession.services.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @PreAuthorize("hasRole('USER')")
@@ -34,7 +29,8 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/me", method = GET, produces = "application/json")
+    @GetMapping(value = "/me", produces = "application/json")
+    @PreAuthorize("hasRole('COMPANY')")
     public ResponseEntity<User> user() {
         String userId = AuthService.getUserId();
 
@@ -42,14 +38,14 @@ public class UserController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/me/jobs", method = GET, produces = "application/json")
+    @GetMapping(value = "/me/jobs", produces = "application/json")
     public ResponseEntity<Iterable<Job>> jobs() {
         String userId = AuthService.getUserId();
         return new ResponseEntity<>(jobService.findAll(userId), OK);
     }
 
     @ResponseBody
-    @RequestMapping(value = "me/jobs/react", method = POST, produces = "application/json")
+    @GetMapping(value = "me/jobs/react", produces = "application/json")
     public ResponseEntity<Void> reactToJob(@RequestBody JobReactRequest reactionRequest) {
         userService.reactToJob(reactionRequest, AuthService.getUserId());
 

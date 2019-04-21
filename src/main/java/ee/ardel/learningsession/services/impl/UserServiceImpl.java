@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
                     user.getNotInterestedJobs().add(job.getId());
                 }
                 userRepository.save(user);
-                jobService.save(job);
+                jobService.update(job);
             }
         }
     }

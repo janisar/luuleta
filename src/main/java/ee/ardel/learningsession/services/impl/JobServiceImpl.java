@@ -2,6 +2,7 @@ package ee.ardel.learningsession.services.impl;
 
 import ee.ardel.learningsession.models.Job;
 import ee.ardel.learningsession.models.Reaction;
+import ee.ardel.learningsession.models.rest.JobRequest;
 import ee.ardel.learningsession.models.rest.ReactionType;
 import ee.ardel.learningsession.repository.JobRepository;
 import ee.ardel.learningsession.services.JobService;
@@ -30,13 +31,20 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> findAllByCompany(String companyId) {
-        return jobRepository.findByCompanyId(companyId);
+    public Job create(JobRequest jobRequest) {
+        return jobRepository.save(mapToJob(jobRequest));
     }
 
     @Override
-    public Job save(Job job) {
+    public Job update(Job job) {
         return jobRepository.save(job);
+    }
+
+    private Job mapToJob(JobRequest jobRequest) {
+
+        return Job.builder()
+                .companyId(jobRequest.getCompanyId())
+                .build();
     }
 
     @Override

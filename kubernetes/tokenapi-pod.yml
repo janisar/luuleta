@@ -2,18 +2,21 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: tokenapi
-  labels:
-    name: tokenapi
-    app: tokenapi
 spec:
+  selector:
+    matchLabels:
+      app: tokenapi
+  replicas: 1
   template:
     metadata:
       labels:
         app: tokenapi
     spec:
       containers:
-        - image: janisardel/tokenapi:0.0.2
+        - image: janisardel/luuleta-token:latest
           name: tokenapi
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo:27017/test
           ports:
-            - name: tokenapi
-              containerPort: 8082
+            - containerPort: 8080

@@ -1,6 +1,7 @@
 package ee.ardel.learningsession.services;
 
 import ee.ardel.learningsession.models.Job;
+import ee.ardel.learningsession.models.rest.JobRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,9 @@ public interface JobService {
 
     Job get(String id);
 
-    List<Job> findAllByCompany(String companyId);
+    Job create(JobRequest jobRequest);
 
-    Job save(Job job);
+    Job update(Job jobRequest);
 
     Iterable<Job> findAll(String userId);
 }
